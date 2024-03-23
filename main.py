@@ -3,7 +3,8 @@
 import logging
 import sys
 
-from dotenv import dotenv_values
+import os
+from dotenv import load_dotenv
 
 from fetcher import *
 from utils import *
@@ -11,14 +12,14 @@ from utils import *
 from producer import *
 
 def main():
-
-    config = dotenv_values(".env")
+    
+    load_dotenv()
 
     logging.info("[YOUTUBE-WATCHER] Starting youtube-watcher")
 
     youtube_playlist_id = "PLE73iWqgrBhg0krhQuvy53ye-1eaf70rJ"
 
-    google_api_key = config["google_api_key"]
+    google_api_key = os.getenv("google_api_key")
     all_video_items = fetch_playlist_items(google_api_key, youtube_playlist_id)
 
     Producer = producer()

@@ -1,4 +1,6 @@
-from dotenv import dotenv_values
+
+import os
+from dotenv import load_dotenv
 
 from confluent_kafka import SerializingProducer
 
@@ -16,10 +18,11 @@ def delivery_report(err, event):
 
 def producer():
 
-    config = dotenv_values(".env")
+    load_dotenv()
+
     sr_config = {
-        "url": config["url"],
-        "basic.auth.user.info": config["basic.auth.user.info"],
+        "url": os.getenv("url"),
+        "basic.auth.user.info": os.getenv("basic.auth.user.info")
     }
 
     schema_registry_client = SchemaRegistryClient(sr_config)
@@ -28,11 +31,11 @@ def producer():
     )
 
     kafka_config = {
-        "bootstrap.servers": config["bootstrap.servers"],
-        "security.protocol": config["security.protocol"],
-        "sasl.mechanisms": config["sasl.mechanisms"],
-        "sasl.username": config["sasl.username"],
-        "sasl.password": config["sasl.password"],
+        "bootstrap.servers": os.getenv("bootstrap.servers"),
+        "security.protocol": os.getenv("security.protocol"),
+        "sasl.mechanisms": os.getenv("sasl.mechanisms"),
+        "sasl.username": os.getenv("sasl.username"),
+        "sasl.password": os.getenv("sasl.password"),
         "key.serializer": StringSerializer(),
         "value.serializer": AvroSerializer(
             schema_registry_client,
